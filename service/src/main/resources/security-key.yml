@@ -1,0 +1,21 @@
+client_keys:
+  - type: iphone
+    key: a85bb0674e08986c6b115d5e3a4884fa
+
+  - type: ipad
+    key: ad9fcda2e679cf9229e37feae2cdcf80
+
+  - type: android
+    key: fd4ad5fcfa0de589ef238c0e7331b585
+
+  - type: yoho
+    key: fd4ad5fcsa0de589af23234ks1923ks
+
+  - type: h5
+    key: fd4ad5fcfa0de589ef238c0e7331b585
+
+  - type: web
+    key: 0ed29744ed318fd28d2c07985d3ba633
+
+  - type: wechat
+    key: fd4ad5fcfa0de589ef238c0e7331b585

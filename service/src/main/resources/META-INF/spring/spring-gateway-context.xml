@@ -1,0 +1,75 @@
+<?xml  version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+
+	<!-- secutity configs -->
+	<bean id="securityConfigMap" class="org.springframework.beans.factory.config.YamlMapFactoryBean">
+		<property name="resources">
+			<list>
+				<value>classpath:security-key.yml</value>
+			</list>
+		</property>
+	</bean>
+
+
+
+	<!--  ********************  interceptors  ******************** -->
+	<bean id="securityInterceptor" class="com.yoho.gateway.interceptor.SecurityInterceptor">
+		<property name="keyConfigMap" ref="securityConfigMap" />
+		<property name="isDebugEnable" value="${is_debug_enable:false}" />
+		<property name="excludeUrls">
+			<list>
+				<value>/statistic/services</value>
+				<value>/payment</value>
+				<value>/jsp</value>
+				<value>/erp</value>
+			</list>
+		</property>
+		<property name="excludeMethods">
+			<list>
+				<value>app.product.preference</value>
+				<value>app.product.intro</value>
+				<value>app.product.data</value>
+				<value>get.memcache</value>
+				<value>clear.memcache</value>
+				<value>clear.productCache</value>
+				<value>app.passport.modifyHead</value>
+				<value>open.passport.get</value>
+				<value>open.message.messageCount</value>
+				<value>open.Passport.get</value>
+				<value>cn.show.returnCurrency</value>
+				<value>app.shops.getStorageInRptList</value>
+			</list>
+		</property>
+		<property name="local">
+			<value>/service_control</value>
+		</property>
+		<property name="isCheckSessionEnable" value="${is_checksession_enable:false}" />
+		<property name="checkSessionMethods">
+			<list>
+ 				<value>app.passport.profile</value>
+				<value>app.SpaceOrders.detail</value>
+				<value>app.SpaceOrders.get</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="localIpInterceptor" class="com.yoho.gateway.interceptor.RemoteIPInterceptor" />
+	<bean id="accessStatistics" class="com.yoho.gateway.interceptor.AccessStatistics" />
+	<bean id="productBrowserStatistic" class="com.yoho.gateway.interceptor.ProductBrowserStatistic" />
+	<!-- end -->
+
+	<bean id="memcacheClient" class="com.yoho.core.cache.impl.MemcachedClientFactory">
+		<constructor-arg name="memcachedServers" value="${cache.servers.gateway.level1.address}" />
+	</bean>
+	<bean id="consultConfigMap" class="org.springframework.beans.factory.config.YamlMapFactoryBean">
+		<property name="resources">
+			<list>
+				<value>classpath:consult-common.yml</value>
+			</list>
+		</property>
+	</bean>
+</beans>
