@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config>
+    <group>
+		<!--yoho-gateway-autoconfig-->        
+		<property name="yoho.gateway.env.webapphome" defaultValue="/home/master/yoho-gateway/deploy" description="应用根目录"/>
+        <property name="yoho.gateway.env.serverport" defaultValue="0" description="应用端口"/>
+	</group>
+    <script>
+    	<generate template="META-INF/autoconf/bin/env.sh" destfile="bin/env.sh"/>
+    	<generate template="META-INF/autoconf/bin/env.bat" destfile="bin/env.bat"/>
+    	<generate template="META-INF/autoconf/conf/tomcat/server.xml" destfile="conf/tomcat/server.xml"/>
+    </script>
+</config>
