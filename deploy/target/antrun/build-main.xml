@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="maven-antrun-" default="main"  >
+<target name="main">
+  <unzip src="target/yoho-gateway.zip" dest="target"/>
+</target>
+</project>

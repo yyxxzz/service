@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Implementation-Title: yoho-gateway-deploy
+Implementation-Version: 1.0.0-SNAPSHOT
+Built-By: yoho
+Specification-Title: yoho-gateway-deploy
+Implementation-Vendor-Id: com.yoho.gateway
+Build-Jdk: 1.8.0_60
+Specification-Version: 1.0.0-SNAPSHOT
+Implementation-URL: http://maven.apache.org/yoho-gateway-parent/yoho-g
+ ateway-deploy
+Created-By: Maven Integration for Eclipse
+
