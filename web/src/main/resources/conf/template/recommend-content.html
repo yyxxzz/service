@@ -1,0 +1,18 @@
+<div class="title">为您优选新品</div>
+<div id="swiper-recommend" class="swiper-container">
+    <div class="swiper-wrapper swiper-wrapper-recommend">
+        {{#recommendList}}
+        <a class="swiper-slide" href="{{url}}">
+            <img class="swiper-lazy img-box" data-src="{{thumb}}">
+            <div class="sale-name">
+                 {{name}}
+             </div>
+            <div class="price">
+                <div class="sale-price {{^price}}no-price{{/price}}">￥{{salePrice}}</div>
+                {{#price}}<div class="old-price">￥{{.}}</div>{{/price}}
+            </div>
+            <div class="swiper-lazy-preloader"></div>
+        </a>
+        {{/recommendList}}
+    </div>
+</div>

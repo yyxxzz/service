@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config>
+	<group>
+		<!-- ************************** web namespace ***************************** -->
+		<property name="yoho.gateway.env.namespace" defaultValue="gateway" description="应用命名空间" />
+
+		<property name="file.uploadTempDir" defaultValue="/Data" description="spring  mvc upload temp dir" />
+
+		<property name="is_debug_enable" defaultValue="false" description="is debug" />
+		
+		<property name="erp.order.status.url" defaultValue="http://portal.admin.yohobuy.com/api/orders/status" description="erp" />
+
+		<property name="is_checksession_enable" defaultValue="true" description="check user session" />
+		<property name="browse.service.url" defaultValue="http://10.66.0.6:8092/brower/" description="browse service url" />
+		<property name="message.inboxNum.expire" defaultValue="120" description="expire time for inbox num. default is 120 seconds" />
+
+		<!-- 回调地址的默认配置 -->
+		<property name="wechat.app.notifyurl" defaultValue="http://service.yoho.cn/payment/wechat_notify" description="" />
+		<property name="wechat.wap.notifyurl" defaultValue="http://service.yoho.cn/payment/wechatwap_notify" description="" />
+		<property name="unionpay.notifyurl" defaultValue="https://service.yoho.cn/payment/unionpay_newnotify" description="" />
+		<property name="applepay.notifyurl" defaultValue="http://service.yoho.cn/payment/applepay_notify" description="" />
+		<property name="qq.notifyurl" defaultValue="http://service.yoho.cn/payment/qqpay_notify" description="" />
+
+		<property name="password.aes.key" defaultValue="yoho9646yoho9646" description="password aes key" />
+
+	</group>
+	<script>
+		<generate template="META-INF/autoconf/logback.xml" destfile="WEB-INF/classes/logback.xml" />
+		<generate template="META-INF/autoconf/config.properties" destfile="WEB-INF/classes/config.properties" />
+		<generate template="META-INF/autoconf/acp_sdk.properties" destfile="WEB-INF/classes/acp_sdk.properties" />
+	</script>
+</config>

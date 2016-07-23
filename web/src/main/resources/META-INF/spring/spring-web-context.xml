@@ -1,0 +1,129 @@
+<?xml  version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context" xmlns:task="http://www.springframework.org/schema/task" xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns="http://www.springframework.org/schema/beans" xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans.xsd
+                        http://www.springframework.org/schema/context
+                        http://www.springframework.org/schema/context/spring-context.xsd
+                        http://www.springframework.org/schema/util
+                        http://www.springframework.org/schema/util/spring-util.xsd
+                        http://www.springframework.org/schema/aop
+                        http://www.springframework.org/schema/aop/spring-aop.xsd
+                        http://www.springframework.org/schema/mvc
+                        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+                        http://www.springframework.org/schema/task
+                        http://www.springframework.org/schema/task/spring-task.xsd">
+
+	<aop:aspectj-autoproxy />
+	<context:property-placeholder ignore-resource-not-found="true" location="classpath*:config.properties" />
+
+	<context:component-scan base-package="com.yoho.gateway" />
+
+	<!-- 启动SpringMVC的注解功能，完成请求和注解POJO的映射 -->
+	<mvc:annotation-driven>
+		<mvc:message-converters>
+			<ref bean="stringConverter" />
+			<ref bean="jsonConverter" />
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+
+
+
+    <bean id="bigDataRedisTemplate"
+          class="org.springframework.data.redis.core.RedisTemplate" primary="true"
+          p:connectionFactory-ref="bigDataJedisConnectionFactory"
+          p:keySerializer-ref="stringRedisSerializer"
+          p:valueSerializer-ref="stringRedisSerializer"/>
+    
+    <bean id="bigDataJedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"
+          p:timeout="150"
+          p:poolConfig-ref="jedisPoolConfig"
+          p:hostName="${bigDataRedis.proxy.address}"
+          p:port="${bigDataRedis.proxy.port}"
+          p:password="${bigDataRedis.proxy.auth}"
+          p:database="${bigDataRedis.proxy.database:0}" primary="true" />
+                
+    <!-- pool config -->
+    <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+        <property name="maxTotal" value="100" />
+        <property name="maxIdle" value="100" />
+        <property name="minIdle" value="50" />
+        <property name="maxWaitMillis" value="${bigDataRedis.pool.maxWaitMillis:2000}" />
+        <property name="testOnBorrow" value="${bigDataRedis.pool.testOnBorrow:false}" />
+        <property name="testWhileIdle" value="${bigDataRedis.pool.testWhileIdle:false}" />
+    </bean>
+    
+    <bean id="stringRedisSerializer"
+            class="org.springframework.data.redis.serializer.StringRedisSerializer"/>
+
+
+	<!-- byte[] 转换器 -->
+	<bean class="org.springframework.http.converter.ByteArrayHttpMessageConverter"/>
+
+	<!--字符串转换器 -->
+	<bean id="stringConverter" class="org.springframework.http.converter.StringHttpMessageConverter">
+		<property name="supportedMediaTypes">
+			<list>
+				<value>text/plain;charset=UTF-8</value>
+				<value>text/html;charset=UTF-8</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="bigDataValueOperations" class="com.yoho.gateway.redis.BigDataValueOperations"/>
+
+	<!-- json转换器 application/json -->
+	<bean id="jsonConverter" class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
+      <property name="supportedMediaTypes" value="application/json;charset=UTF-8"/>
+      <property name="features">
+        <array value-type="com.alibaba.fastjson.serializer.SerializerFeature">
+         <value>DisableCircularReferenceDetect</value>
+        </array>
+      </property>
+    </bean>
+    <bean id="DisableCircularReferenceDetect" class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+      <property name="staticField" value="com.alibaba.fastjson.serializer.SerializerFeature.DisableCircularReferenceDetect"></property>
+    </bean>
+
+
+	<!-- 配置MultipartResolver 用于文件上传 使用spring的CommosMultipartResolver -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="defaultEncoding" value="UTF-8"></property>
+		<property name="maxUploadSize" value="${file.maxsize}"></property>
+		<property name="uploadTempDir" value="${file.uploadTempDir}"></property>
+		<property name="resolveLazily" value="true"></property>
+	</bean>
+
+
+    <task:annotation-driven executor="myExecutor"
+                            scheduler="myScheduler" />
+    <task:executor id="myExecutor" pool-size="5" />
+    <task:scheduler id="myScheduler" pool-size="10" />
+
+	<util:map id="stroSysMap" key-type="java.lang.String" value-type="com.yoho.gateway.service.StroSystemService">
+		<entry key="QINIU" value-ref="qNSystemServiceImpl"></entry>
+	</util:map>
+
+	<util:list id="stroSysList">
+		<ref bean="qNSystemServiceImpl" />
+	</util:list>
+
+	<bean id="handlebarsViewResolver" class="com.github.jknack.handlebars.springmvc.HandlebarsViewResolver">
+		<property name="prefix" value="classpath:/conf/template" />
+		<property name="suffix" value=".html" />
+		<property name="contentType" value="text/html;charset=UTF-8" />
+	</bean>
+
+	
+	<!--Spring mvc 拦截器 -->
+	<mvc:interceptors>
+		<ref bean="trace.traceInterceptor"/>
+		<ref bean="threadProfileInterceptor"/>
+		<ref bean="localIpInterceptor" />
+		<ref bean="securityInterceptor" />
+		<ref bean="accessStatistics"/>
+		<ref bean="productBrowserStatistic"/>
+		<ref bean="threadProfileInterceptor"/>
+	</mvc:interceptors>
+
+</beans>

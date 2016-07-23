@@ -1,0 +1,99 @@
+<configuration>
+	<!-- 日志最大的历史 7天 -->
+	<property name="maxHistory" value="7" />
+	<!-- 日志最大的文件大小 10MB -->
+	<property name="maxFileSize" value="10MB" />
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>[%X{X-B3-TraceId:-},%X{X-B3-SpanId:-},%X{X-Span-Export:-}] - %-5level [%thread] %logger{35} - %m%n</pattern>
+		</encoder>
+	</appender>
+
+	<!-- 登录时，如果一个IP在一定时间内登录次数过多，记录日志 appender -->
+
+	<appender name="WARN_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>debug.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- daily rollover -->
+			<fileNamePattern>debug.%d{yyyy-MM-dd}.%i.log.gz
+			</fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<!-- or whenever the file size reaches 100MB -->
+				<maxFileSize>10KB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+			<!-- keep 30 days' worth of history -->
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+	</appender>
+	
+	<appender name="RECOMMEND_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${yoho.logs.basedir}/${yoho.gateway.env.namespace}/recommend.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <fileNamePattern>
+                ${yoho.logs.basedir}/${yoho.gateway.env.namespace}/archived/recommend.%d{yyyy-MM-dd}.%i.log.gz
+            </fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!-- or whenever the file size reaches 100MB -->
+                <maxFileSize>${yoho.logs.maxFileSize}</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <!-- keep 30 days' worth of history -->
+            <maxHistory>${yoho.logs.maxHistory}</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%-1relative - %d{HH:mm:ss.SSS} [%thread] %-5level %logger{0}:%line -- %msg%n</pattern>
+        </encoder>
+    </appender>
+
+	<appender name="LOGIN_LOW_CLIENT_TYPE_RECORD" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${yoho.logs.basedir}/${yoho.gateway.env.namespace}/login_low_clientType_record.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- daily rollover -->
+			<fileNamePattern>${yoho.logs.basedir}/${yoho.gateway.env.namespace}/archived/login_low_clientType_record.%d{yyyy-MM-dd}.%i.log.gz
+			</fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<!-- or whenever the file size reaches 100MB -->
+				<maxFileSize>${yoho.logs.maxFileSize}</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+			<!-- keep 30 days' worth of history -->
+			<maxHistory>${yoho.logs.maxHistory}</maxHistory>
+		</rollingPolicy>
+
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+
+
+	<logger name="org.apache.zookeeper.ClientCnxn" level="WARN" />
+	<!-- 登录时，如果一个IP在一定时间内登录次数过多，记录日志 appender -->
+	<logger name="ipLoginMoreLog" level="INFO" additivity="false">
+		<appender-ref ref="IP_LOGIN_MORE_LOG" />
+	</logger>
+	<logger name="org.apache.zookeeper.ClientCnxn" level="WARN" />
+	<logger name="com.yoho.core.rest.client.finder.zookeeper.CuratorXDiscoveryClientWrapper" level="INFO" />
+
+	<!-- resources -->
+	<logger name="TRACE" additivity="true">
+		<level value="TRACE"/>
+		<appender-ref ref="STDOUT"/>
+	</logger>
+
+	<root level="DEBUG">
+		<appender-ref ref="STDOUT" />
+		<appender-ref ref="WARN_LOG" />
+	</root>
+	<!-- 推荐位 大数据采集 -->
+    <logger name="recommendLogger" additivity="true">
+        <level value="INFO"/>
+        <appender-ref ref="RECOMMEND_LOG"/>
+    </logger>
+
+
+	<!-- 3.8.1 之前的版本记录日志-->
+	<logger name="loginLowClientRecord" additivity="true">
+		<level value="INFO"/>
+		<appender-ref ref="LOGIN_LOW_CLIENT_TYPE_RECORD"/>
+	</logger>
+</configuration>

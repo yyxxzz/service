@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>{{title}}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta http-equiv="cleartype" content="on">
+    <meta content="telephone=no" name="format-detection" />
+    <script type="text/javascript">
+    (function(doc, win) {
+        var docEl = doc.documentElement;
+        (function() {
+            var clientWidth = docEl.clientWidth;
+            if (!clientWidth) {
+                return;
+            }
+            docEl.style.fontSize = 20 * (clientWidth / 320) + 'px';
+        }());
+    })(document, window);
+</script>
+    <link rel="dns-prefetch" href="//cdn.yoho.cn">
+    <link rel="dns-prefetch" href="//static.yohobuy.com">
+    <link rel="dns-prefetch" href="//img12.static.yhbimg.com">
+    <link rel="dns-prefetch" href="//img13.static.yhbimg.com">
+    <!--
+    <link rel="stylesheet" href="http://cdn.yoho.cn/myohobuy/{{version}}/index.css">
+    -->
+    <link rel="stylesheet" href="http://cdn.yoho.cn/limitgood-webview/{{version}}/index.css">
+
+    <link rel="apple-touch-icon-precomposed" href="http://static.yohobuy.com/m/v1/img/touch/apple-touch-icon-144x144-precomposed-new.png">
+    <link rel="apple-touch-startup-image" sizes="640x920" href="http://static.yohobuy.com/m/v1/img/startup/startup-retina.png" media="screen and (max-device-width: 480px) and (-webkit-min-device-pixel-ratio: 2)">
+    <link rel="apple-touch-startup-image" sizes="320x460" href="http://static.yohobuy.com/m/v1/img/startup/startup.png" media="screen and (max-device-width: 320)">
+</head>
+<body>
+<div class="limit-good-page yoho-page">
+    <div class="goodDesc">
+        {{#goodDescList}}
+        {{#img}}
+        <img src="{{attachUrl}}" alt="{{attachName}}">
+        {{/img}}
+        {{#text}}
+        <p class="desc">{{intro}}</p>
+        {{/text}}
+        {{#video}}
+        <video poster="{{intro}}"  controls="controls" preload="metadata" loop="loop" width="100%" name="media">
+            <source src="{{attachUrl}}" type="video/ogg;codecs='theora,vorbis'" media="screen" />
+            <source src="{{attachUrl}}"/>
+        </video>
+        {{/video}}
+        {{/goodDescList}}
+    </div>
+</div>
+</body>
+</html>

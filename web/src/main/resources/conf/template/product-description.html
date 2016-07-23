@@ -1,0 +1,133 @@
+{{#goodsDescription}}
+<div class="goods-desc  page-block">
+    <div class="service"></div>
+    <h1 class="title">
+        {{title}}
+        <span class="en-title">{{enTitle}}</span>
+    </h1>
+    {{#detail}}
+    <div class="detail table clearfix">
+        {{#list}}
+        <div class="column">{{param}}</div>
+        {{/list}}
+    </div>
+    {{/detail}}
+    <div class="desc-text">{{desc}}</div>
+</div>
+
+{{/goodsDescription}}
+
+{{#sizeInfo}}
+<div class="size-info  page-block">
+    <h1 class="title">
+        {{title}}
+        <span class="en-title">{{enTitle}}</span>
+    </h1>
+    {{#detail}}
+    <div class="detail">
+        <div class="swiper-container detail-swiper" id="size-swiper-container">
+            <div class="swiper-wrapper">
+                {{#list}}
+                <div class="swiper-slide " >
+                    {{#params}}
+                    <div class="cell">{{param}}</div>
+                    {{/params}}
+                </div>
+                {{/list}}
+            </div>
+        </div>
+        <p class="tips">提示：左滑查看完整表格信息</p>
+    </div>
+    {{/detail}}
+</div>
+{{/sizeInfo}}
+
+{{#measurementMethod}}
+<div class="measurement-method  page-block">
+    <h1 class="title">
+        {{title}}
+        <span class="en-title">{{enTitle}}</span>
+    </h1>
+    <div class="detail" style="width:100%">
+        <img class="lazy" data-original="{{img}}" alt="">
+    </div>
+</div>
+{{/measurementMethod}}
+
+{{#reference}}
+<div class="size-info  page-block">
+    <h1 class="title">
+        {{title}}
+        <span class="en-title">{{enTitle}}</span>
+    </h1>
+    {{#detail}}
+    <div class="detail">
+        <div class="swiper-container detail-swiper" id="reference-swiper-container">
+            <div class="swiper-wrapper">
+                {{#list}}
+                {{#if @first}}
+                <div class="swiper-slide first-group" >
+
+                </div>
+                {{else}}
+                <div class="swiper-slide" >
+                    {{#params}}
+                    <div class=" cell">{{param}}</div>
+                    {{/params}}
+                </div>
+                {{/if}}
+                {{/list}}
+            </div>
+        </div>
+        <p class="tips">提示:左滑查看完整表格信息</p>
+    </div>
+    {{/detail}}
+</div>
+{{/reference}}
+
+{{#materials}}
+<div class="materials  page-block">
+    <h1 class="title">
+        {{title}}
+        <span class="en-title">{{enTitle}}</span>
+    </h1>
+    <div class="detail">
+        {{#list}}
+        <div class="material-item">
+            <img class="lazy" data-original="{{img}}" alt="">
+            <p class="material-desc">
+                {{desc}}
+            </p>
+        </div>
+        {{/list}}
+    </div>
+</div>
+{{/materials}}
+
+{{#washTips}}
+<div class="wash-tips page-block">
+    <div class="detail table clearfix">
+        {{#list}}
+        <div class="tip">
+            <img src="{{img}}" alt="">
+            <span class="caption">{{caption}}</span>
+        </div>
+        {{/list}}
+    </div>
+</div>
+{{/washTips}}
+
+{{#productDetail}}
+<div class="product-detail page-block">
+    <h1 class="title">
+        {{{title}}}
+        <span class="en-title">{{{enTitle}}}</span>
+    </h1>
+    <div class="detail">
+        <p>{{{desc}}}</p>
+        {{#list}}
+        <img class="lazy" data-original="{{img}}" alt="">
+        {{/list}}
+    </div>
+</div>
+{{/productDetail}}
