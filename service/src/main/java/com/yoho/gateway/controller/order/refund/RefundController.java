@@ -85,6 +85,7 @@ public class RefundController {
      * @param areaCode 地区编号
      * @param goodsList 退货商品
      * @param payment 退款
+     * @is_blk 
      * @return
      */
     @RequestMapping(params = "method=app.refund.submit")
