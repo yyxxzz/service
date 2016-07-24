@@ -44,7 +44,6 @@ public class RefundController {
     
     /**
      * 获取退换货订单列表
-     * @param is_blk
      */
     @RequestMapping(params = "method=app.refund.getList")
     @ResponseBody
