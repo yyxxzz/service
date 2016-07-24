@@ -93,7 +93,7 @@ public class RefundController {
                               @RequestParam(value = "area_code", required = false, defaultValue = "") String areaCode,
                               @RequestParam("goods") String goodsList,
                               @RequestParam("payment") String payment,
-                              @RequestParam(value = "app_type", required = false, defaultValue = "0") int app_type) {
+                              @RequestParam(value = "is_blk", required = false, defaultValue = "0") int app_type) {
         RefundSubmitRequest refundSubmitRequest = new RefundSubmitRequest();
         refundSubmitRequest.setUid(uid);
         refundSubmitRequest.setOrderCode(orderCode);
