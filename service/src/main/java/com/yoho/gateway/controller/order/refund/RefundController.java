@@ -44,6 +44,7 @@ public class RefundController {
     
     /**
      * 获取退换货订单列表
+     * @param is_blk
      */
     @RequestMapping(params = "method=app.refund.getList")
     @ResponseBody
@@ -92,7 +93,8 @@ public class RefundController {
     public ApiResponse submit(@RequestParam("order_code") long orderCode, @RequestParam("uid") int uid,
                               @RequestParam(value = "area_code", required = false, defaultValue = "") String areaCode,
                               @RequestParam("goods") String goodsList,
-                              @RequestParam("payment") String payment) {
+                              @RequestParam("payment") String payment,
+                              @RequestParam(value = "app_type", required = false, defaultValue = "0") int app_type) {
         RefundSubmitRequest refundSubmitRequest = new RefundSubmitRequest();
         refundSubmitRequest.setUid(uid);
         refundSubmitRequest.setOrderCode(orderCode);
