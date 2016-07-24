@@ -49,8 +49,7 @@ public class RefundController {
     @ResponseBody
     public ApiResponse goodsList(@RequestParam("uid") int uid,
                                  @RequestParam(value = "page", required = false, defaultValue = "1") int page,
-                                 @RequestParam(value = "limit", required = false, defaultValue = "10") int limit,
-                                 @RequestParam(value = "app_type", required = false, defaultValue = "0") int app_type) {
+                                 @RequestParam(value = "limit", required = false, defaultValue = "10") int limit) {
         RefundRequest refundRequest = new RefundRequest();
         refundRequest.setUid(uid);
         refundRequest.setPage(page);
