@@ -50,7 +50,8 @@ public class RefundController {
     @ResponseBody
     public ApiResponse goodsList(@RequestParam("uid") int uid,
                                  @RequestParam(value = "page", required = false, defaultValue = "1") int page,
-                                 @RequestParam(value = "limit", required = false, defaultValue = "10") int limit) {
+                                 @RequestParam(value = "limit", required = false, defaultValue = "10") int limit,
+                                 @RequestParam(value = "app_type", required = false, defaultValue = "0") int app_type) {
         RefundRequest refundRequest = new RefundRequest();
         refundRequest.setUid(uid);
         refundRequest.setPage(page);
@@ -85,7 +86,6 @@ public class RefundController {
      * @param areaCode 地区编号
      * @param goodsList 退货商品
      * @param payment 退款
-     * @is_blk 
      * @return
      */
     @RequestMapping(params = "method=app.refund.submit")
@@ -94,7 +94,7 @@ public class RefundController {
                               @RequestParam(value = "area_code", required = false, defaultValue = "") String areaCode,
                               @RequestParam("goods") String goodsList,
                               @RequestParam("payment") String payment,
-                              @RequestParam(value = "is_blk", required = false, defaultValue = "0") int app_type) {
+                              @RequestParam(value = "app_type", required = false, defaultValue = "0") int app_type) {
         RefundSubmitRequest refundSubmitRequest = new RefundSubmitRequest();
         refundSubmitRequest.setUid(uid);
         refundSubmitRequest.setOrderCode(orderCode);
