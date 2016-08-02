@@ -1,5 +1,6 @@
 package com.yoho.gateway.controller.order;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.yoho.core.common.restbean.ResponseBean;
@@ -17,11 +18,13 @@ import com.yoho.product.model.GoodsImagesBo;
 import com.yoho.service.model.order.OrderServices;
 import com.yoho.service.model.order.OrderStatusDesc;
 import com.yoho.service.model.order.model.PaymentBO;
+import com.yoho.service.model.order.model.refund.UnderscoreGoods;
 import com.yoho.service.model.order.model.simple.SimpleIntBO;
 import com.yoho.service.model.order.payment.OrdersPayRefundRequest;
 import com.yoho.service.model.order.request.*;
 import com.yoho.service.model.order.response.*;
 import com.yoho.service.model.order.utils.ClientTypeUtils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +38,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
+
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -280,21 +284,20 @@ public class YohoOrderController {
      * 5：待评论  成功订单
      * 7：失败 取消 订单
      */
-    @RequestMapping(params = "method=app.SpaceOrders.get")
-    @ResponseBody
     public ApiResponse getMyOrders(@RequestParam("type") int type,
-                                   @RequestParam("uid") Integer uid,
-                                   @RequestParam(value = "page", required = false, defaultValue = "1") int page,
-                                   @RequestParam(value = "limit", required = false, defaultValue = "10") int limit) {
-        OrderListRequest request = new OrderListRequest();
-        request.setType(type);
-        request.setLimit(limit);
-        request.setPage(page);
-        request.setUid(uid.toString());
-        CountBO countBO = serviceCaller.call(OrderServices.getOrderCount, request, CountBO.class);
-        Orders[] ordeses = serviceCaller.call(OrderServices.getOrderList, request, Orders[].class);
-        JSONObject data = createMyOrdersVO(page, limit, countBO.getCount(), ordeses);
-        return new ApiResponse.ApiResponseBuilder().code(200).message("ok").data(data).build();
+    							   @RequestParam("uid") Integer uid,
+    							   @RequestParam(value="page",required=false,defaultValue="1") int page,
+    							   @RequestParam(value="limit",required=false,defaultValue="10") int limit){
+    	OrderListRequest request = new OrderListRequest();
+    	request.setType(type);
+    	request.setLimit(limit);
+    	request.setPage(page);
+    	request.setLimit(limit);
+    	request.setUid(uid.toString());
+    	CountBO countBO = serviceCaller.call(OrderServices.getOrderCount, request, CountBO.class);
+    	Orders[] orders = serviceCaller.call(OrderServices.getOrderList, request, Orders[].class);
+    	JSONObject data = createMyOrdersVO(page,limit,countBO.getCount(),orders);
+    	return new ApiResponse.ApiResponseBuilder().code(200).message("ok").data(data).build();
     }
 
     private String goodsTypeConvert(int orderType) {
@@ -928,5 +931,34 @@ public class YohoOrderController {
         List<AntHbfqBO> hbfqBOList = serviceCaller.call(OrderServices.getAntHbfqDetail, orderCode, List.class);
         logger.info("[{}] End getAntHbfqDetail", orderCode);
         return new ApiResponse.ApiResponseBuilder().code(200).message("ok").data(hbfqBOList).build();
+    }
+    /**
+     * 获取订单状态
+     * @param uid
+     * @param orderCode
+     */
+    @RequestMapping(params = "method=app.SpaceOrders.getOrderPayStatusInfo")
+    @ResponseBody
+    public ApiResponse getOrderPayStatusInfo(@RequestParam("orderCode") Long orderCode,@RequestParam("orderCode") int uid) {
+    	OrderPaymentStatusBO orderPaymentStatusBO = new OrderPaymentStatusBO();
+    	orderPaymentStatusBO.setOrderCode(orderCode);
+    	orderPaymentStatusBO.setUid(uid);
+        logger.info("getOrderPayStatusInfo for OrderPaymentStatusBO start ordercode is {},uid is {}", orderCode,uid);
+        orderPaymentStatusBO = serviceCaller.call(OrderServices.getOrderPayStatusInfo, orderPaymentStatusBO, OrderPaymentStatusBO.class);
+        logger.info("getOrderPayStatusInfo for OrderPaymentStatusBO end ordercode is {},uid is {}", orderCode,uid);
+        return new ApiResponse.ApiResponseBuilder().code(200).message("200").data(orderPaymentStatusBO).build();
+    }
+    /**
+     * 给ERP获取订单取消状态
+     * @param orderCodes
+     */
+    public ApiResponse findOrderCancelReason(@RequestParam("orderCode") String orderCodes) {
+        logger.info("getOrderPayStatusInfo for OrderPaymentStatusBO start ordercode is {}", orderCodes);
+        List<OrderCancelReasonBO> cancelRequests = JSON.parseArray(orderCodes,OrderCancelReasonBO.class);
+        OrderCancelRequest cancelRequest = new OrderCancelRequest();
+        cancelRequest.setOrderCancelReasons(cancelRequests);
+        OrderCancelRequest[] orderCancelRequests = serviceCaller.call(OrderServices.getOrderPayStatusInfo, cancelRequests, OrderCancelRequest[].class);
+        logger.info("getOrderPayStatusInfo for OrderPaymentStatusBO end ordercode is {},uid is {}", cancelRequests);
+        return new ApiResponse.ApiResponseBuilder().code(200).message("200").data(orderCancelRequests).build();
     }
 }
